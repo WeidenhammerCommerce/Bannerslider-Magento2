@@ -1,5 +1,5 @@
 {
-  "name": "magestore/bannerslider-magento2",
+  "name": "hammer/bannerslider-magento2",
   "description": "N/A",
   "require": {
     "php": "~5.5.0|~5.6.0|~7.0.0"
@@ -23,7 +23,7 @@
       "registration.php"
     ],
     "psr-4": {
-      "Magestore\\Bannerslider\\": ""
+      "hammer\\Bannerslider\\": ""
     }
   }
 }
