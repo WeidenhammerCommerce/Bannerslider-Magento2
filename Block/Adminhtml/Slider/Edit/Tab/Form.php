@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Magestore
  *
@@ -19,11 +18,8 @@
  * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
  * @license     http://www.magestore.com/license-agreement.html
  */
-
 namespace Magestore\Bannerslider\Block\Adminhtml\Slider\Edit\Tab;
-
 use Magestore\Bannerslider\Model\Status;
-
 /**
  * Slider Form.
  * @category Magestore
@@ -34,19 +30,24 @@ use Magestore\Bannerslider\Model\Status;
 class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     const FIELD_NAME_SUFFIX = 'slider';
-
     /**
      * @var \Magento\Config\Model\Config\Structure\Element\Dependency\FieldFactory
      */
     protected $_fieldFactory;
-
     /**
      * [$_bannersliderHelper description].
      *
      * @var \Magestore\Bannerslider\Helper\Data
      */
     protected $_bannersliderHelper;
-
+    /**
+     * @var \Magento\Store\Ui\Component\Listing\Column\Store\Options
+     */
+    protected $_storeOptions;
+    /**
+     * @var \Magestore\Bannerslider\Model\SliderFactory
+     */
+    protected $_sliderFactory;
     /**
      * [__construct description].
      *
@@ -64,18 +65,20 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Data\FormFactory $formFactory,
         \Magento\Config\Model\Config\Structure\Element\Dependency\FieldFactory $fieldFactory,
+        \Magento\Store\Ui\Component\Listing\Column\Store\Options $_storeOptions,
+        \Magestore\Bannerslider\Model\SliderFactory $_sliderFactory,
         array $data = []
     ) {
         $this->_bannersliderHelper = $bannersliderHelper;
         $this->_fieldFactory = $fieldFactory;
+        $this->_storeOptions = $_storeOptions;
+        $this->_sliderFactory = $_sliderFactory;
         parent::__construct($context, $registry, $formFactory, $data);
     }
-
     protected function _prepareLayout()
     {
         $this->getLayout()->getBlock('page.title')->setPageTitle($this->getPageTitle());
     }
-
     /**
      * Prepare form.
      *
@@ -87,7 +90,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         $isElementDisabled = true;
         /** @var \Magento\Framework\Data\Form $form */
         $form = $this->_formFactory->create();
-
         /*
          * declare dependence
          */
@@ -95,18 +97,13 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         $dependenceBlock = $this->getLayout()->createBlock(
             'Magento\Backend\Block\Widget\Form\Element\Dependence'
         );
-
         // dependence field map array
         $fieldMaps = [];
-
         $form->setHtmlIdPrefix('page_');
-
         $fieldset = $form->addFieldset('base_fieldset', ['legend' => __('Slider Information')]);
-
         if ($slider->getId()) {
             $fieldset->addField('slider_id', 'hidden', ['name' => 'slider_id']);
         }
-
         $fieldset->addField(
             'title',
             'text',
@@ -118,7 +115,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'class' => 'required-entry',
             ]
         );
-
         $fieldMaps['show_title'] = $fieldset->addField(
             'show_title',
             'select',
@@ -130,7 +126,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'disabled' => false,
             ]
         );
-
         $fieldMaps['status'] = $fieldset->addField(
             'status',
             'select',
@@ -142,7 +137,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'disabled' => false,
             ]
         );
-
         $fieldMaps['style_content'] = $fieldset->addField(
             'style_content',
             'select',
@@ -161,7 +155,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 ],
             ]
         );
-
         $fieldMaps['custom_code'] = $fieldset->addField(
             'custom_code',
             'editor',
@@ -173,7 +166,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'required' => false,
             ]
         );
-
         $previewUrl = $this->_bannersliderHelper->getBackendUrl('*/*/preview', ['_current' => false]);
         $fieldMaps['style_slide'] = $fieldset->addField(
             'style_slide',
@@ -185,7 +177,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'note' => '<a data-preview-url="' . $previewUrl . '" href="' . $previewUrl . '" target="_blank" id="style-slide-view">Preview</a>',
             ]
         );
-
         $fieldMaps['sort_type'] = $fieldset->addField(
             'sort_type',
             'select',
@@ -204,7 +195,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 ],
             ]
         );
-
         $fieldMaps['width'] = $fieldset->addField(
             'width',
             'text',
@@ -215,7 +205,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'class' => 'required-entry validate-number validate-greater-than-zero',
             ]
         );
-
         $fieldMaps['height'] = $fieldset->addField(
             'height',
             'text',
@@ -226,7 +215,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'class' => 'required-entry validate-number validate-greater-than-zero',
             ]
         );
-
         $fieldMaps['animationB'] = $fieldset->addField(
             'animationB',
             'select',
@@ -236,7 +224,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'values' => $this->_bannersliderHelper->getAnimationB(),
             ]
         );
-
         $fieldMaps['animationA'] = $fieldset->addField(
             'animationA',
             'select',
@@ -246,7 +233,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'values' => $this->_bannersliderHelper->getAnimationA(),
             ]
         );
-
         $fieldMaps['note_color'] = $fieldset->addField(
             'note_color',
             'select',
@@ -257,7 +243,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'values' => $this->_bannersliderHelper->getOptionColor(),
             ]
         );
-
         $fieldMaps['slider_speed'] = $fieldset->addField(
             'slider_speed',
             'text',
@@ -267,7 +252,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'note' => 'milliseconds . This is the display time of a banner',
             ]
         );
-
         $fieldMaps['position_note'] = $fieldset->addField(
             'position_note',
             'select',
@@ -279,7 +263,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'note' => 'is position will be shown on all pages',
             ]
         );
-
         $fieldMaps['description'] = $fieldset->addField(
             'description',
             'editor',
@@ -291,7 +274,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'required' => false,
             ]
         );
-
         $positionImage = [];
         for ($i = 1; $i <= 5; ++$i) {
             $positionImage[] = $this->getViewFileUrl("Magestore_Bannerslider::images/position/bannerslider-ex{$i}.png");
@@ -307,7 +289,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'note' => '<a title="" data-position-image=\'' . json_encode($positionImage) . '\' data-tooltip-image="">Preview</a>',
             ]
         );
-
         $fieldMaps['position_custom'] = $fieldset->addField(
             'position_custom',
             'select',
@@ -319,7 +300,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'note' => '<a title="" data-position-image=\'' . json_encode($positionImage) . '\' data-tooltip-image="">Preview</a>',
             ]
         );
-
         $fieldMaps['category_ids'] = $fieldset->addField(
             'category_ids',
             'multiselect',
@@ -329,16 +309,13 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'values' => $this->_bannersliderHelper->getCategoriesArray(),
             ]
         );
-
         /*
          * Add field map
          */
         foreach ($fieldMaps as $fieldMap) {
             $dependenceBlock->addFieldMap($fieldMap->getHtmlId(), $fieldMap->getName());
         }
-
         $mappingFieldDependence = $this->getMappingFieldDependence();
-
         /*
          * Add field dependence
          */
@@ -360,35 +337,47 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 );
             }
         }
-
         /*
-         * add child block dependence
+         * Add child block dependence
          */
         $this->setChild('form_after', $dependenceBlock);
-
         $defaultData = [
             'width' => 400,
             'height' => 200,
             'slider_speed' => 4500,
         ];
-
         if (!$slider->getId()) {
             $slider->setStatus($isElementDisabled ? Status::STATUS_ENABLED : Status::STATUS_DISABLED);
             $slider->addData($defaultData);
         }
-
         if ($slider->hasData('animationB')) {
             $slider->setData('animationA', $slider->getData('animationB'));
         }
-
         if ($slider->hasData('position')) {
             $slider->setPositionCustom($slider->getPosition());
         }
-
         $form->setValues($slider->getData());
         $form->addFieldNameSuffix(self::FIELD_NAME_SUFFIX);
         $this->setForm($form);
-
+        /*
+         * Add multi-store support
+         */
+        $sliderId = $this->getRequest()->getParam('slider_id');
+        $sliderModel = $this->_sliderFactory->create();
+        $fieldset = $form->addFieldset('advanced_website', ['legend' => __('Website')]);
+        if($sliderId){
+            $sliderModel->load($sliderId);
+        }
+        $fieldMaps['website_id'] = $fieldset->addField(
+            'website_id',
+            'select',
+            [
+                'label' => __('Website'),
+                'name' => self::FIELD_NAME_SUFFIX.'[website_id]',
+                'values' => $this->_storeOptions->toOptionArray(),
+                'value' => $sliderModel->getWebsiteId(),
+            ]
+        );
         return parent::_prepareForm();
     }
     /**
@@ -402,7 +391,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
             ['fieldData' => ['value' => (string)$refField, 'negative' => $negative, 'separator' => $separator], 'fieldPrefix' => $fieldPrefix]
         );
     }
-
     public function getMappingFieldDependence()
     {
         return [
@@ -481,17 +469,14 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
             ],
         ];
     }
-
     public function getSlider()
     {
         return $this->_coreRegistry->registry('slider');
     }
-
     public function getPageTitle()
     {
         return $this->getSlider()->getId() ? __("Edit Slider '%1'", $this->escapeHtml($this->getSlider()->getTitle())) : __('New Slider');
     }
-
     /**
      * Prepare label for tab.
      *
@@ -501,7 +486,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     {
         return __('Slider Information');
     }
-
     /**
      * Prepare title for tab.
      *
@@ -511,7 +495,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     {
         return __('Slider Information');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -519,7 +502,6 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     {
         return true;
     }
-
     /**
      * {@inheritdoc}
      */
