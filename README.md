@@ -1,5 +1,9 @@
 ## forked from https://github.com/Magestore/Bannerslider-Magento2 
 
+ composer require hammer/bannerslider-magento2:dev-master
+
+---------------------------------------Original Banner Slider readme ---------------------------------------------
+
 # Banner Slider Extension on Magento 2.0
 
 Welcome to Banner Slider on Magento 2.0 Installation! We're glad that you are interested in our extension.
