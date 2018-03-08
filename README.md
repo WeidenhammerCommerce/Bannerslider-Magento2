@@ -3,7 +3,7 @@
 # How to install new version?
 	composer require hammer/bannerslider-magento2:dev-master
 	
-## feaatures added to original version
+## Features added to original version
 	Support mutltistore
 
 
