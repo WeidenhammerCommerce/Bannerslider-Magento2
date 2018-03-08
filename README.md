@@ -1,8 +1,15 @@
-## forked from https://github.com/Magestore/Bannerslider-Magento2 
+### Forked from https://github.com/Magestore/Bannerslider-Magento2 
 
- composer require hammer/bannerslider-magento2:dev-master
+# How to install new version?
+	composer require hammer/bannerslider-magento2:dev-master
+	
+## feaatures added to original version
+	Support mutltistore
 
----------------------------------------Original Banner Slider readme ---------------------------------------------
+
+
+
+# ----------------------------  Original Banner Slider Readme  ---------------------------------------------
 
 # Banner Slider Extension on Magento 2.0
 
