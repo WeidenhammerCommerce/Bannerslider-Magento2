@@ -35,6 +35,34 @@ class UpgradeSchema implements UpgradeSchemaInterface
             }
         }
 
-        $setup->endSetup();
+        if (version_compare($context->getVersion(), '2.0.1') < 0) {
+
+            $bannerTable = $setup->getTable('magestore_bannerslider_banner');
+            if ($setup->getConnection()->isTableExists($bannerTable) == true) {
+                $columnsBanner = [
+                    'tablet_image' => [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'nullable' => true,
+                        'comment' => 'Banner Image for Tablets',
+                    ],
+                    'mobile_image' => [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'nullable' => true,
+                        'comment' => 'Banner Image for Phones',
+                    ],
+                    'disclaimer' => [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'nullable' => true,
+                        'comment' => 'Disclaimer',
+                    ]
+                ];
+                $connection = $setup->getConnection();
+                foreach ($columnsBanner as $name => $definition) {
+                    $connection->addColumn($bannerTable, $name, $definition);
+                }
+            }
+        }
+
+            $setup->endSetup();
     }
 }

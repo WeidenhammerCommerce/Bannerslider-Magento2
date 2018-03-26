@@ -257,6 +257,39 @@ class Banner extends \Magento\Backend\Block\Widget\Form\Generic implements \Mage
             ]
         );
 
+        $elements['tablet_image'] = $fieldset->addField(
+            'tablet_image',
+            'image',
+            [
+                'title' => __('Tablet Banner Image'),
+                'label' => __('Tablet Banner Image'),
+                'name' => 'tablet_image',
+                'note' => 'Allow image type: jpg, jpeg, gif, png',
+            ]
+        );
+
+        $elements['mobile_image'] = $fieldset->addField(
+            'mobile_image',
+            'image',
+            [
+                'title' => __('Mobile Banner Image'),
+                'label' => __('Mobile Banner Image'),
+                'name' => 'mobile_image',
+                'note' => 'Allow image type: jpg, jpeg, gif, png',
+            ]
+        );
+
+        $elements['disclaimer'] = $fieldset->addField(
+            'disclaimer',
+            'text',
+            [
+                'title' => __('Disclaimer Text'),
+                'label' => __('Disclaimer Text'),
+                'name' => 'disclaimer',
+                'note' => 'Disclaimer Text',
+            ]
+        );
+
         $dateFormat = 'M/d/yyyy';
         $timeFormat = 'h:mm a';
         if($dataObj->hasData('start_time')) {

@@ -81,7 +81,7 @@ class Save extends \Magestore\Bannerslider\Controller\Adminhtml\Banner
                     $result = $uploader->save(
                         $mediaDirectory->getAbsolutePath(\Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH)
                     );
-                    $data['image'] = \Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH.$result['file'];
+                    $data['image'] = \Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH . $result['file'];
                 } catch (\Exception $e) {
                     if ($e->getCode() == 0) {
                         $this->messageManager->addError($e->getMessage());
@@ -100,13 +100,122 @@ class Save extends \Magestore\Bannerslider\Controller\Adminhtml\Banner
                 }
             }
 
+
+            //tablet
+            $imageRequest = $this->getRequest()->getFiles('tablet_image');
+            if ($imageRequest) {
+                if (isset($imageRequest['name'])) {
+                    $fileName = $imageRequest['name'];
+                } else {
+                    $fileName = '';
+                }
+            } else {
+                $fileName = '';
+            }
+
+            if ($imageRequest && strlen($fileName)) {
+                /*
+                 * Save image upload
+                 */
+                try {
+                    $uploader = $this->_uploaderFactory->create(['fileId' => 'tablet_image']);
+
+                    $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png']);
+
+                    /** @var \Magento\Framework\Image\Adapter\AdapterInterface $imageAdapter */
+                    $imageAdapter = $this->_adapterFactory->create();
+
+                    $uploader->addValidateCallback('banner_image', $imageAdapter, 'validateUploadFile');
+                    $uploader->setAllowRenameFiles(true);
+                    $uploader->setFilesDispersion(true);
+
+                    /** @var \Magento\Framework\Filesystem\Directory\Read $mediaDirectory */
+                    $mediaDirectory = $this->_objectManager->get('Magento\Framework\Filesystem')
+                        ->getDirectoryRead(DirectoryList::MEDIA);
+                    $result = $uploader->save(
+                        $mediaDirectory->getAbsolutePath(\Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH)
+                    );
+                    $data['tablet_image'] = \Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH . $result['file'];
+                } catch (\Exception $e) {
+                    if ($e->getCode() == 0) {
+                        $this->messageManager->addError($e->getMessage());
+                    }
+                }
+            } else {
+                if (isset($data['tablet_image']) && isset($data['tablet_image']['value'])) {
+                    if (isset($data['tablet_image']['delete'])) {
+                        $data['tablet_image'] = null;
+                        $data['delete_image'] = true;
+                    } elseif (isset($data['image']['value'])) {
+                        $data['tablet_image'] = $data['tablet_image']['value'];
+                    } else {
+                        $data['tablet_image'] = null;
+                    }
+                }
+            }
+
+
+
+            //
+            $imageRequest = $this->getRequest()->getFiles('mobile_image');
+            if ($imageRequest) {
+                if (isset($imageRequest['name'])) {
+                    $fileName = $imageRequest['name'];
+                } else {
+                    $fileName = '';
+                }
+            } else {
+                $fileName = '';
+            }
+
+            if ($imageRequest && strlen($fileName)) {
+                /*
+                 * Save image upload
+                 */
+                try {
+                    $uploader = $this->_uploaderFactory->create(['fileId' => 'mobile_image']);
+
+                    $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png']);
+
+                    /** @var \Magento\Framework\Image\Adapter\AdapterInterface $imageAdapter */
+                    $imageAdapter = $this->_adapterFactory->create();
+
+                    $uploader->addValidateCallback('banner_image', $imageAdapter, 'validateUploadFile');
+                    $uploader->setAllowRenameFiles(true);
+                    $uploader->setFilesDispersion(true);
+
+                    /** @var \Magento\Framework\Filesystem\Directory\Read $mediaDirectory */
+                    $mediaDirectory = $this->_objectManager->get('Magento\Framework\Filesystem')
+                        ->getDirectoryRead(DirectoryList::MEDIA);
+                    $result = $uploader->save(
+                        $mediaDirectory->getAbsolutePath(\Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH)
+                    );
+                    $data['mobile_image'] = \Magestore\Bannerslider\Model\Banner::BASE_MEDIA_PATH . $result['file'];
+                } catch (\Exception $e) {
+                    if ($e->getCode() == 0) {
+                        $this->messageManager->addError($e->getMessage());
+                    }
+                }
+            } else {
+                if (isset($data['mobile_image']) && isset($data['mobile_image']['value'])) {
+                    if (isset($data['mobile_image']['delete'])) {
+                        $data['mobile_image'] = null;
+                        $data['delete_image'] = true;
+                    } elseif (isset($data['mobile_image']['value'])) {
+                        $data['mobile_image'] = $data['mobile_image']['value'];
+                    } else {
+                        $data['mobile_image'] = null;
+                    }
+                }
+            }
+
             /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate */
 //            $localeDate = $this->_objectManager->get('Magento\Framework\Stdlib\DateTime\TimezoneInterface');
             $localeDate = $this->_objectManager->get('Magento\Framework\Stdlib\DateTime\Timezone');
 
             $data['start_time'] = $localeDate->date($data['start_time'], null, 'UTC')->format('Y-m-d H:i');
-            $data['end_time'] = $localeDate->date($data['end_time'],  null, 'UTC')->format('Y-m-d H:i');
-            
+            $data['end_time'] = $localeDate->date($data['end_time'], null, 'UTC')->format('Y-m-d H:i');
+
             $model->setData($data)
                 ->setStoreViewId($storeViewId);
 
@@ -132,4 +241,6 @@ class Save extends \Magestore\Bannerslider\Controller\Adminhtml\Banner
 
         return $resultRedirect->setPath('*/*/');
     }
+
+
 }

@@ -181,7 +181,11 @@ class Banner extends \Magento\Framework\Model\AbstractModel
             'target',
             'image_alt',
             'image',
-            'caption'
+            'caption',
+            'tablet_image',
+            'mobile_image',
+            'disclaimer '
+
         );
     }
 

@@ -236,6 +236,51 @@
                 </item>
             </argument>
         </column>
+
+        <column name="tablet_image" class="Magestore\Bannerslider\Ui\Component\Listing\Column\Image">
+            <argument name="data" xsi:type="array">
+                <item name="width" xsi:type="string">150px</item>
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/column</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="align" xsi:type="string">left</item>
+                    <item name="label" xsi:type="string" translate="true">Tablet Image</item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="mobile_image" class="Magestore\Bannerslider\Ui\Component\Listing\Column\Image">
+            <argument name="data" xsi:type="array">
+                <item name="width" xsi:type="string">150px</item>
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/column</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="align" xsi:type="string">left</item>
+                    <item name="label" xsi:type="string" translate="true">Mobile Image</item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="disclaimer">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <!--<item name="editor" xsi:type="array">-->
+                    <!--<item name="editorType" xsi:type="string">text</item>-->
+                    <!--<item name="validation" xsi:type="array">-->
+                    <!--<item name="required-entry" xsi:type="boolean">true</item>-->
+                    <!--</item>-->
+                    <!--</item>-->
+                    <item name="label" xsi:type="string" translate="true">Disclaimer</item>
+                </item>
+            </argument>
+        </column>
+
+
         <column name="click_url">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
