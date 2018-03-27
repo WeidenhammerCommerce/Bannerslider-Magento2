@@ -296,6 +296,16 @@ class SliderItem extends \Magento\Framework\View\Element\Template
         return $this->_bannersliderHelper->getBaseUrlMedia($banner->getImage());
     }
 
+    public function getTabletBannerImageUrl(\Magestore\Bannerslider\Model\Banner $banner)
+    {
+        return $this->_bannersliderHelper->getBaseUrlMedia($banner->getTabletImage());
+    }
+
+    public function getMobileBannerImageUrl(\Magestore\Bannerslider\Model\Banner $banner)
+    {
+        return $this->_bannersliderHelper->getBaseUrlMedia($banner->getMobileImage());
+    }
+
     /**
      * get flexslider html id.
      *
