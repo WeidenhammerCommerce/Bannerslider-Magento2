@@ -146,7 +146,7 @@ class Save extends \Magestore\Bannerslider\Controller\Adminhtml\Banner
                     if (isset($data['tablet_image']['delete'])) {
                         $data['tablet_image'] = null;
                         $data['delete_image'] = true;
-                    } elseif (isset($data['image']['value'])) {
+                    } elseif (isset($data['tablet_image']['value'])) {
                         $data['tablet_image'] = $data['tablet_image']['value'];
                     } else {
                         $data['tablet_image'] = null;
